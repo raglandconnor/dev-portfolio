@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { uploadFileToCloudinary } from "@/lib/cloudinary";
 import { extractText } from "@/lib/pdf-reader";
 import { CircleCheck, FilePlus, FileText } from "lucide-react";
 import React, { useState } from "react";
@@ -38,8 +37,9 @@ export default function ResumeUploader() {
           setFile(null);
           setError(error);
         }}
-        children={<ResumeContainer file={file} />}
-      />
+      >
+        <ResumeContainer file={file} />
+      </FileUploader>
       {file && (
         <Button
           className="mt-4 w-full"
