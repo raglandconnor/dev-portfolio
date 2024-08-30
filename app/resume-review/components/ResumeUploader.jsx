@@ -1,9 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { extractText } from "@/lib/pdf-reader";
 import { CircleCheck, FilePlus, FileText } from "lucide-react";
 import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.min.mjs";
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 const fileTypes = ["pdf"];
 
@@ -19,11 +24,16 @@ export default function ResumeUploader() {
 
   const handleReview = async () => {
     setIsLoading(true);
+    try {
+      const text = await getTextFromPDF(file);
 
-    const text = await extractText(file);
-
-    console.log(text);
-    setIsLoading(false);
+      console.log(text);
+    } catch (error) {
+      console.error("Error processing PDF:", error);
+      setError("Error processing PDF file");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -74,4 +84,18 @@ function ResumeContainer({ file }) {
       )}
     </div>
   );
+}
+
+async function getTextFromPDF(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const document = await pdfjs.getDocument(arrayBuffer).promise;
+  // For loop to extract text
+  let extractedText = "";
+  for (let i = 1; i <= document.numPages; i++) {
+    const page = await document.getPage(i);
+    const textContent = await page.getTextContent();
+    const pageText = textContent.items.map((item) => item.str).join(" ");
+    extractedText += pageText + "\n";
+  }
+  return extractedText;
 }
