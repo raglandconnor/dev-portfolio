@@ -20,14 +20,8 @@ export default function ResumeUploader() {
 
   const handleReview = async () => {
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    // Upload the file to Cloudinary to get the public ID
-    // const { fileUrl, publicId, originalName } = await uploadFileToCloudinary(
-    //   formData
-    // );
 
-    const text = await extractText(formData);
+    const text = await extractText(file);
 
     console.log(text);
     setIsLoading(false);
