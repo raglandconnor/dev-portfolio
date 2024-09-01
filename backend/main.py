@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from . import models, db, routes
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
