@@ -5,7 +5,7 @@ const BioCard = ({ userId }) => {
   return (
     <div className="inline-block mt-3 md:mt-0 w-full border rounded-2xl">
       <div className="py-2 px-3">
-        <h1 className="text-4xl md:text-6xl font-bold">{userId}</h1>
+        <h1 className="text-4xl md:text-5xl font-bold">{userId}</h1>
         <h2 className="text-xl">Senior Software Engineer</h2>
         <div className="flex flex-row gap-2 mt-1">
           <Link href="/">

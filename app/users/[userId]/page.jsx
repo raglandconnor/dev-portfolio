@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import BioCard from '../components/BioCard';
+import GitHubContributionsCard from '../components/GitHubContributionsCard';
+import ExperienceCard from '../components/ExperienceCard';
 
 const ProfilePage = ({ params }) => {
   return (
@@ -14,9 +16,8 @@ const ProfilePage = ({ params }) => {
           />
           <BioCard userId={params.userId} />
         </div>
-        <div className="h-64 w-full rounded-2xl border">
-          github contributions chart
-        </div>
+        <GitHubContributionsCard userId={params.userId} />
+        <ExperienceCard userId={params.userId} />
       </div>
     </main>
   );
