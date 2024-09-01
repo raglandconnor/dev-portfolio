@@ -6,7 +6,7 @@ import ExperienceCard from '../components/ExperienceCard';
 const ProfilePage = ({ params }) => {
   return (
     <main className="flex flex-col items-center mt-8 md:mt-24">
-      <div className="flex flex-col gap-3 w-[95%] lg:w-[1000px] p-5 border rounded-2xl">
+      <div className="flex flex-col gap-3 w-[95%] lg:w-[1000px] p-1 rounded-2xl">
         <div className="md:flex md:flex-row md:gap-3 ">
           <Image
             src="/next.svg"
