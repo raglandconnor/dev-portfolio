@@ -6,9 +6,7 @@ const ExperienceCard = ({ userId }) => {
       <h2 className="font-semibold text-2xl md:text-3xl border-b">
         Experience
       </h2>
-      <ExperienceItem />
-      <ExperienceItem />
-      <ExperienceItem />
+      <ExperienceItem userId={userId} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-const ExperienceItem = () => {
+const ExperienceItem = ({ userId }) => {
   return (
     <div className="px-0 md:px-2 mt-5">
       <div>
@@ -17,6 +17,7 @@ const ExperienceItem = () => {
           assumenda architecto dolorum magni neque. Soluta labore quia possimus
           enim? Sed fugiat maxime aliquid quae sit dicta. Ipsam ex eius non.
         </p>
+        <p>{userId}</p>
       </div>
     </div>
   );
