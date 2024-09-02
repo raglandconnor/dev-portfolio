@@ -3,6 +3,7 @@ import BioCard from '../components/BioCard';
 import GitHubContributionsCard from '../components/GitHubContributionsCard';
 import ExperienceCard from '../components/ExperienceCard';
 import EducationCard from '../components/EducationCard';
+import ProjectsCard from '../components/ProjectsCard';
 
 const ProfilePage = ({ params }) => {
   return (
@@ -20,6 +21,7 @@ const ProfilePage = ({ params }) => {
         <GitHubContributionsCard userId={params.userId} />
         <ExperienceCard userId={params.userId} />
         <EducationCard userId={params.userId} />
+        <ProjectsCard userId={params.userId} />
       </div>
     </main>
   );
