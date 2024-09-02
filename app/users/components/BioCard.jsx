@@ -1,4 +1,4 @@
-import { Linkedin, Github, SquareArrowOutUpRight } from 'lucide-react';
+import { Linkedin, Github, SquareArrowOutUpRight, Inbox } from 'lucide-react';
 import Link from 'next/link';
 
 const BioCard = ({ userId }) => {
@@ -19,6 +19,9 @@ const BioCard = ({ userId }) => {
               size={36}
               className="bg-gray-200 p-1 rounded-md"
             />
+          </Link>
+          <Link href="/">
+            <Inbox size={36} className="bg-gray-200 p-1 rounded-md" />
           </Link>
         </div>
         <div className="mt-4">
