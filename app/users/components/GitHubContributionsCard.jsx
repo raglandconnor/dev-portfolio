@@ -120,7 +120,7 @@ const GitHubContribGraph = ({ githubLogin }) => {
       const profile = document.createElement('div');
       profile.innerHTML = `<a href="https://github.com/${ghLogin}">${ghLogin}</a>`;
       header.className = 'ghCalendarHeader';
-      total.textContent = `${totalContribs} contributions in the last year`;
+      total.textContent = `${totalContribs} GitHub contributions in the last year`;
       header.appendChild(total);
       header.appendChild(profile);
       return header;

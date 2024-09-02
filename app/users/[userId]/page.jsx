@@ -19,7 +19,9 @@ const ProfilePage = ({ params }) => {
           />
           <BioCard userId={params.userId} />
         </div>
-        <GitHubContributionsCard githubLogin={params.userId} />
+        <div className="hidden md:block">
+          <GitHubContributionsCard githubLogin={params.userId} />
+        </div>
         <ExperienceCard userId={params.userId} />
         <EducationCard userId={params.userId} />
         <ProjectsCard userId={params.userId} />
