@@ -29,6 +29,10 @@ yarn-error.log*
 .env*.local
 .env
 
+/backend/venv
+/backend/__pycache__
+/backend/db.sqlite3
+
 # vercel
 .vercel
 

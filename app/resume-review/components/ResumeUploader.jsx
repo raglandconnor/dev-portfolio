@@ -3,41 +3,46 @@ import { Button } from "@/components/ui/button";
 import { CircleCheck, FilePlus, FileText } from "lucide-react";
 import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.min.mjs";
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+import useHttp from "@/app/hooks/useHttp";
+import { API_ENDPOINTS } from "@/lib/constants";
 
 const fileTypes = ["pdf"];
 
 export default function ResumeUploader() {
   const [file, setFile] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [extractedText, setExtractedText] = useState(null);
+  const { data, error, isLoading, sendRequest } = useHttp(
+    {
+      url: API_ENDPOINTS.PDF_READER,
+      method: "POST",
+    },
+    false
+  );
 
   const handleChange = (file) => {
     setFile(file);
-    setError(null);
   };
 
   const handleReview = async () => {
-    setIsLoading(true);
     try {
-      const text = await getTextFromPDF(file);
+      const formData = new FormData();
+      formData.append("file", file);
 
-      console.log(text);
+      const response = await fetch(API_ENDPOINTS.PDF_READER, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      setExtractedText(data.extracted_text);
     } catch (error) {
       console.error("Error processing PDF:", error);
-      setError("Error processing PDF file");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center gap-4">
       <FileUploader
         handleChange={handleChange}
         name="resume"
@@ -59,6 +64,9 @@ export default function ResumeUploader() {
           <FileText className="w-4 h-4 mr-2" />
           Review Resume
         </Button>
+      )}
+      {extractedText && (
+        <p className="text-black text-center mt-4">{extractedText}</p>
       )}
       {error && <p className="text-red-500 text-center mt-4">{error}</p>}
     </div>
@@ -84,18 +92,4 @@ function ResumeContainer({ file }) {
       )}
     </div>
   );
-}
-
-async function getTextFromPDF(file) {
-  const arrayBuffer = await file.arrayBuffer();
-  const document = await pdfjs.getDocument(arrayBuffer).promise;
-  // For loop to extract text
-  let extractedText = "";
-  for (let i = 1; i <= document.numPages; i++) {
-    const page = await document.getPage(i);
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items.map((item) => item.str).join(" ");
-    extractedText += pageText + "\n";
-  }
-  return extractedText;
 }
