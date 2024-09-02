@@ -8,18 +8,22 @@ const BioCard = ({ userId }) => {
         <h1 className="text-4xl md:text-5xl font-bold">{userId}</h1>
         <h2 className="text-xl">Senior Software Engineer</h2>
         <div className="flex flex-row gap-2 mt-1">
+          {/* Users LinkedIn Profile */}
           <Link href="/">
             <Linkedin size={36} className="bg-gray-200 p-1 rounded-md" />
           </Link>
+          {/* Users GitHub Account */}
           <Link href="/">
             <Github size={36} className="bg-gray-200 p-1 rounded-md" />
           </Link>
-          <Link href="/">
+          {/* Users own website */}
+          <Link href="https://www.google.com/">
             <SquareArrowOutUpRight
               size={36}
               className="bg-gray-200 p-1 rounded-md"
             />
           </Link>
+          {/*  */}
           <Link href="/">
             <Inbox size={36} className="bg-gray-200 p-1 rounded-md" />
           </Link>

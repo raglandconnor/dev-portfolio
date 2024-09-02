@@ -12,6 +12,7 @@ const ProfilePage = ({ params }) => {
         <div className="md:flex md:flex-row md:gap-3 ">
           <Image
             src="/next.svg"
+            alt={`${params.userId}'s profile picture`}
             width={0}
             height={0}
             className="w-96 h-96 rounded-2xl border inline-block"
