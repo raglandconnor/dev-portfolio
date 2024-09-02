@@ -32,21 +32,21 @@ const ProjectItem = ({ userId }) => {
       <div className="ml-4 mt-1 flex flex-row gap-2 flex-wrap">
         <a
           href="/"
-          className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline"
+          className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline hover:bg-slate-100"
         >
           <BookText className="size-4" />
           Read more
         </a>
         <a
           href="/"
-          className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline"
+          className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline hover:bg-slate-100"
         >
           <Link2 className="size-4" />
           Link
         </a>
         <a
           href="/"
-          className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline"
+          className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline hover:bg-slate-100"
         >
           <Github className="size-4" />
           GitHub
