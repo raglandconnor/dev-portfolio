@@ -31,7 +31,7 @@ yarn-error.log*
 
 /backend/venv
 /backend/__pycache__
-/backend/db.sqlite3
+devport.db
 
 # vercel
 .vercel
