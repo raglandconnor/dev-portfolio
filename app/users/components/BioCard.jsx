@@ -1,4 +1,4 @@
-import { Linkedin, Github, Link as LinkIcon } from 'lucide-react';
+import { Linkedin, Github, SquareArrowOutUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 const BioCard = ({ userId }) => {
@@ -15,7 +15,10 @@ const BioCard = ({ userId }) => {
             <Github size={36} className="bg-gray-200 p-1 rounded-md" />
           </Link>
           <Link href="/">
-            <LinkIcon size={36} className="bg-gray-200 p-1 rounded-md" />
+            <SquareArrowOutUpRight
+              size={36}
+              className="bg-gray-200 p-1 rounded-md"
+            />
           </Link>
         </div>
         <div className="mt-4">
