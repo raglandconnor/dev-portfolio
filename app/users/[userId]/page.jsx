@@ -19,7 +19,7 @@ const ProfilePage = ({ params }) => {
           />
           <BioCard userId={params.userId} />
         </div>
-        <GitHubContributionsCard userId={params.userId} />
+        <GitHubContributionsCard githubLogin={params.userId} />
         <ExperienceCard userId={params.userId} />
         <EducationCard userId={params.userId} />
         <ProjectsCard userId={params.userId} />
