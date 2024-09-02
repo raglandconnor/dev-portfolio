@@ -6,7 +6,7 @@ const ProjectItem = ({ userId }) => {
       <div>
         <h3 className="font-semibold text-xl">Project title</h3>
         <div className="md:flex md:flex-row md:justify-between md:items-baseline">
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2 flex-wrap">
             <div className="bg-slate-200 rounded-full px-2 border">Next.js</div>
             <div className="bg-slate-200 rounded-full px-2 border">React</div>
             <div className="bg-slate-200 rounded-full px-2 border">
@@ -15,7 +15,7 @@ const ProjectItem = ({ userId }) => {
             <div className="bg-slate-200 rounded-full px-2 border">Node.js</div>
             <div className="bg-slate-200 rounded-full px-2 border">Vercel</div>
           </div>
-          <p className="italic">Jan 2020 - Present</p>
+          <p className="italic whitespace-nowrap">Jan 2020 - Present</p>
         </div>
       </div>
       <div className="ml-2 pl-2 mt-2 border-l">
@@ -29,7 +29,7 @@ const ProjectItem = ({ userId }) => {
         </p>
         <p>{userId}</p>
       </div>
-      <div className="ml-4 mt-1 flex flex-row gap-2">
+      <div className="ml-4 mt-1 flex flex-row gap-2 flex-wrap">
         <a
           href="/"
           className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline"
