@@ -1,4 +1,4 @@
-import { Link2, Github, BookText } from 'lucide-react';
+import { Link2, Github, BookText, Youtube } from 'lucide-react';
 
 const ProjectItem = ({ userId }) => {
   return (
@@ -50,6 +50,13 @@ const ProjectItem = ({ userId }) => {
         >
           <Github className="size-4" />
           GitHub
+        </a>
+        <a
+          href="/"
+          className="flex flex-row gap-1 items-center py-1 px-3 border shadow-md rounded-lg hover:underline hover:bg-slate-100"
+        >
+          <Youtube className="size-4" />
+          YouTube
         </a>
       </div>
     </div>
