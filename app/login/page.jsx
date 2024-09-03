@@ -21,7 +21,7 @@ export const LoginPage = () => {
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">Log Into Your Account</CardTitle>
             <CardDescription>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/signup" className="underline hover:font-semibold">
                 Sign up
               </Link>
