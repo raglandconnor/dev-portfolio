@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import infoCards from '../components/InfoCards';
 import { CheckCheck } from 'lucide-react';
+import Navbar from './components/Navbar';
 
 export default function Home() {
   return (
@@ -115,42 +116,6 @@ function InfoCard({ title, Icon, children }) {
         <h3 className="text-lg font-bold sm:text-xl text-white">{title}</h3>
       </div>
       <div>{children}</div>
-    </div>
-  );
-}
-
-function Navbar() {
-  return (
-    <div className="w-full h-16 backdrop-filter backdrop-blur-xl bg-black bg-opacity-70 border-b border-gray-800 flex items-center justify-center">
-      <div className="max-w-7xl w-full flex items-center justify-between p-4">
-        <h6 className="font-bold text-white">DevFolio</h6>
-        <ul className="flex gap-8">
-          <li>
-            <Link
-              className="hover:text-gray-300 transition-colors text-xs sm:text-base text-white"
-              href="#home"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="hover:text-gray-300 transition-colors text-xs sm:text-base text-white"
-              href="#about"
-            >
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="hover:text-gray-300 transition-colors text-xs sm:text-base text-white"
-              href="#waitlist"
-            >
-              Waitlist
-            </Link>
-          </li>
-        </ul>
-      </div>
     </div>
   );
 }
