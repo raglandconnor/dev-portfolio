@@ -1,30 +1,44 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CircleCheck, FilePlus, FileText } from "lucide-react";
+import { CircleCheck, FilePlus, FileText, Upload } from "lucide-react";
 import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import useHttp from "@/app/hooks/useHttp";
 import { API_ENDPOINTS } from "@/lib/constants";
+import { analyzeResume } from "@/actions/analyze-resume";
+import ResumeAnalysisChart from "./ResumeAnalysisChart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const fileTypes = ["pdf"];
-
 export default function ResumeUploader() {
   const [file, setFile] = useState(null);
   const [extractedText, setExtractedText] = useState(null);
-  const { data, error, isLoading, sendRequest } = useHttp(
-    {
-      url: API_ENDPOINTS.PDF_READER,
-      method: "POST",
-    },
-    false
-  );
+  const [uploadingError, setUploadingError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [analysis, setAnalysis] = useState(null);
 
   const handleChange = (file) => {
     setFile(file);
+    setUploadingError(null);
+    setAnalysis(null);
   };
 
   const handleReview = async () => {
     try {
+      setIsLoading(true);
+      setUploadingError(null);
+
       const formData = new FormData();
       formData.append("file", file);
 
@@ -33,16 +47,26 @@ export default function ResumeUploader() {
         body: formData,
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
+      const data = await response.json();
       setExtractedText(data.extracted_text);
+
+      // Analyze the extracted text
+      const analysisResult = await analyzeResume(data.extracted_text);
+      setAnalysis(analysisResult);
     } catch (error) {
       console.error("Error processing PDF:", error);
+      setUploadingError(`Failed to process the resume: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex flex-col items-center justify-center gap-4 w-full max-w-3xl mx-auto">
       <FileUploader
         handleChange={handleChange}
         name="resume"
@@ -50,45 +74,89 @@ export default function ResumeUploader() {
         multiple={false}
         onTypeError={(error) => {
           setFile(null);
-          setError(error);
+          setUploadingError(error);
         }}
       >
-        <ResumeContainer file={file} />
+        <div className="w-full p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors duration-300 cursor-pointer">
+          {file ? (
+            <>
+              <CircleCheck className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-700 text-center">
+                {file.name}
+              </h3>
+              <p className="text-sm text-gray-500 mt-1 text-center">
+                {(file.size / 1024 / 1024).toFixed(2)} MB
+              </p>
+            </>
+          ) : (
+            <>
+              <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-700 text-center">
+                Upload your resume
+              </h3>
+              <p className="text-sm text-gray-500 mt-1 text-center">
+                Drag and drop or click to select a PDF file
+              </p>
+            </>
+          )}
+        </div>
       </FileUploader>
       {file && (
         <Button
-          className="mt-4 w-full"
+          className="w-full mt-4"
           onClick={handleReview}
           disabled={isLoading}
         >
           <FileText className="w-4 h-4 mr-2" />
-          Review Resume
+          {isLoading ? "Analyzing..." : "Review Resume"}
         </Button>
       )}
-      {extractedText && (
-        <p className="text-black text-center mt-4">{extractedText}</p>
+      {uploadingError && (
+        <p className="text-red-500 text-center mt-4">{uploadingError}</p>
       )}
-      {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-    </div>
-  );
-}
 
-function ResumeContainer({ file }) {
-  return (
-    <div className="border-2 p-6 sm:p-10 md:p-16 border-dashed border-cyan-400 rounded-lg bg-cyan-50 hover:bg-cyan-100 hover:border-cyan-600 hover:cursor-pointer flex flex-col items-center justify-center gap-4 sm:gap-6 md:gap-8">
-      <FilePlus className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-gray-400" />
-      <p className="text-base sm:text-lg md:text-xl text-center">
-        Drop a file here to upload, or
-        <span className="text-blue-500 block text-center mt-2">
-          Click to Upload
-        </span>
-      </p>
-      <p className="text-sm text-gray-500">Accepted file type: PDF</p>
-      {file && (
-        <p className="text-green-500 flex items-center gap-2 sm:gap-3 text-base sm:text-lg">
-          <CircleCheck className="w-5 h-5 sm:w-6 sm:h-6" />
-          {file.name}
-        </p>
+      {analysis && (
+        <Card className="w-full mt-8">
+          <CardHeader>
+            <CardTitle>Resume Analysis</CardTitle>
+            <CardDescription>
+              Scores, feedback, and real examples for improvement for each
+              section of your resume
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResumeAnalysisChart analysis={analysis} />
+            <Accordion type="single" collapsible className="w-full">
+              {Object.entries(analysis).map(
+                ([section, { score, feedback, examples }], index) => (
+                  <AccordionItem key={section} value={`item-${index}`}>
+                    <AccordionTrigger>
+                      <div className="flex justify-between w-full">
+                        <span>{section}</span>
+                        <span className="text-sm">Score: {score}/10</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <p className="text-sm mt-1">{feedback}</p>
+                      {examples && examples.length > 0 && (
+                        <div className="mt-2">
+                          <h4 className="text-sm font-semibold">
+                            Examples for Improvement:
+                          </h4>
+                          <ul className="list-disc list-inside text-sm">
+                            {examples.map((example, index) => (
+                              <li key={index}>{example}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                )
+              )}
+            </Accordion>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

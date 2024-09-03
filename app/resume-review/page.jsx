@@ -2,9 +2,15 @@ import ResumeUploader from "./components/ResumeUploader";
 
 export default function ResumeReviewPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8">Resume Review</h1>
+    <div className="w-full px-4 sm:px-6 md:px-8">
+      <h1 className="text-3xl sm:text-4xl font-bold my-6 sm:my-8 text-center">
+        Resume Review
+      </h1>
+      <p className="text-center text-gray-500 max-w-xl mx-auto mb-6 sm:mb-8">
+        Get personalized feedback on your resume's content, structure, and
+        formatting from our advanced AI system, powered by OpenAI.
+      </p>
       <ResumeUploader />
-    </main>
+    </div>
   );
 }
