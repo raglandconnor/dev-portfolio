@@ -32,11 +32,19 @@ export const dummyUserData = [
     education: [
       {
         school: 'University of Florida',
-        degree: 'Bachelor of Science',
-        fieldOfStudy: 'Computer Science',
+        degree: 'B.S. Computer Science',
         startDate: 'August 2018',
         endDate: 'May 2022',
         location: 'Gainesville, FL',
+        description: `I studied Computer Science and Mathematics.`,
+      },
+      {
+        school: 'Martin County High School',
+        degree: 'General Education',
+        startDate: 'August 2018',
+        endDate: 'May 2022',
+        location: 'Stuart, FL',
+        description: `High school.`,
       },
     ],
     projects: [
