@@ -2,7 +2,6 @@ import Spline from '@splinetool/react-spline';
 import Image from 'next/image';
 import Link from 'next/link';
 import infoCards from '../components/InfoCards';
-import { CheckCheck } from 'lucide-react';
 import Navbar from './components/Navbar';
 
 export default function Home() {
@@ -82,24 +81,17 @@ export default function Home() {
           Join the Waitlist
         </h4>
         <div className="w-full max-w-3xl">
-          <p className="text-center text-gray-300 mb-4">
-            Be the first to know when we launch! Sign up now to join our
-            waitlist.
+          <p className="text-center text-gray-300 mb-6">
+            Be the first to know when we launch!
           </p>
-          <form className="flex flex-col gap-4">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="p-2 rounded bg-gray-800 border border-gray-700 text-white placeholder-gray-400"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-white text-black rounded p-2 text-sm transition-colors hover:bg-gray-200"
+          <div className="grid">
+            <Link
+              href="/signup"
+              className="bg-white flex flex-col items-center justify-center text-black rounded p-2 text-lg transition-colors hover:bg-gray-200"
             >
-              Sign Up
-            </button>
-          </form>
+              Sign up now to join our waitlist.
+            </Link>
+          </div>
         </div>
       </section>
     </main>
