@@ -1,11 +1,10 @@
-import ProjectItem from './projects/ProjectItem';
+import ProjectItems from './projects/ProjectItems';
 
 const ProjectsCard = ({ userId }) => {
   return (
     <div className="p-5 w-full rounded-2xl border">
       <h2 className="font-semibold text-2xl md:text-3xl border-b">Projects</h2>
-      <ProjectItem userId={userId} />
-      <ProjectItem userId={userId} />
+      <ProjectItems userId={userId} />
     </div>
   );
 };

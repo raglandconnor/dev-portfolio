@@ -16,7 +16,7 @@ const ExperienceItems = ({ userId }) => {
   }, []);
 
   return (
-    <div className="px-0 md:px-2 mt-5">
+    <div className="px-0 md:px-2 mt-5 grid gap-3">
       {userExperiences.map((exp, idx) => (
         <div key={idx}>
           <div>

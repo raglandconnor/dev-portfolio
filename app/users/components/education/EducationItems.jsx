@@ -16,7 +16,7 @@ const EducationItems = ({ userId }) => {
   }, []);
 
   return (
-    <div className="px-0 md:px-2 mt-5">
+    <div className="px-0 md:px-2 mt-5 grid gap-3">
       {userEducation.map((edu, idx) => (
         <div key={idx}>
           <div>
