@@ -20,7 +20,10 @@ const ExperienceItems = ({ userId }) => {
       {userExperiences.map((exp, idx) => (
         <div key={idx}>
           <div>
-            <h3 className="font-semibold text-xl">{exp.title}</h3>
+            <div className="md:flex md:flex-row md:justify-between md:items-baseline">
+              <h3 className="font-semibold text-xl">{exp.title}</h3>
+              <p className="text-lg">{exp.location}</p>
+            </div>
             <div className="md:flex md:flex-row md:justify-between md:items-baseline">
               <h4 className="text-lg">{exp.company}</h4>
               <p className="italic">{`${exp.startDate} - ${exp.endDate}`}</p>
