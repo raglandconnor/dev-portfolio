@@ -22,7 +22,7 @@ export default function Home() {
 
         <div className='w-full h-2/4 md:h-full md:w-3/5 relative'>
           <Spline
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full pointer-events-none"
             scene='https://prod.spline.design/pvM5sSiYV2ivWraz/scene.splinecode'
           />
         </div>
