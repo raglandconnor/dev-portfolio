@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,8 +13,60 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
+import { useState } from 'react';
 
 export const SignUpPage = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const queryParams = new URLSearchParams({
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        password: password,
+      });
+
+      const res = await fetch(
+        `https://dev-portfolio-v5tg.onrender.com/signup/?${queryParams.toString()}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (Array.isArray(data.detail)) {
+          const errorMessages = data.detail.map((err) => err.msg).join(', ');
+          setError(errorMessages);
+        } else {
+          setError(data.detail || 'Something went wrong');
+        }
+        setLoading(false);
+        return;
+      }
+
+      console.log('Signed up successfully');
+    } catch (error) {
+      setError('Something went wrong');
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="bg-black">
       <Navbar />
@@ -20,41 +74,66 @@ export const SignUpPage = () => {
         <Card className="w-[95%] md:w-[500px]">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">Sign Up for an Account</CardTitle>
-            <CardDescription>
+            {/* <CardDescription>
               Already have an account?{' '}
               <Link href="/login" className="underline hover:font-semibold">
                 Log In
               </Link>
-            </CardDescription>
+            </CardDescription> */}
           </CardHeader>
           <CardContent className="grid gap-4">
-            {/* <div className="grid gap-6">
-            <Button variant="outline">
-              Github
-            </Button>
-          </div> */}
-            {/* <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
-          </div> */}
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" />
-            </div>
+            {error && <p className="text-red-500">{error}</p>}{' '}
+            <form onSubmit={handleSubmit} className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Creating account...' : 'Create account'}
+              </Button>
+            </form>
           </CardContent>
-          <CardFooter>
-            <Button className="w-full">Create account</Button>
-          </CardFooter>
+          <CardFooter></CardFooter>
         </Card>
       </div>
     </div>

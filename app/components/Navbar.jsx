@@ -12,15 +12,15 @@ const Navbar = () => {
             <li>
               <Link
                 className="hover:text-gray-300 transition-colors text-xs sm:text-base text-white"
-                href="#about"
+                href="/#about"
               >
-                About
+                Features
               </Link>
             </li>
             <li>
               <Link
                 className="hover:text-gray-300 transition-colors text-xs sm:text-base text-white"
-                href="#waitlist"
+                href="/#waitlist"
               >
                 Waitlist
               </Link>
