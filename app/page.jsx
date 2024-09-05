@@ -1,7 +1,7 @@
 import Spline from '@splinetool/react-spline';
 import Image from 'next/image';
 import Link from 'next/link';
-import infoCards from '../components/InfoCards';
+import infoCards from './components/InfoCards';
 import Navbar from './components/Navbar';
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
           </div>
           <p className="max-w-md text-center md:text-left text-sm md:text-base text-gray-400">
             DevFolio is a platform for developers to showcase their work and
-            connect with others.{' '}
+            connect with others. We also offer tools to help you get hired.
           </p>
           <div className="w-full flex items-center justify-center md:justify-start gap-4">
             <Link
@@ -67,9 +67,16 @@ export default function Home() {
                 Icon={infoCard.icon}
                 title={infoCard.title}
               >
-                <p className="text-sm sm:text-base text-center md:text-left text-gray-300">
-                  {infoCard.bodyText}
-                </p>
+                <div className="grid gap-4">
+                  {infoCard.bodyText.map((text, idx) => (
+                    <p
+                      key={idx}
+                      className="text-sm sm:text-base text-center text-gray-300"
+                    >
+                      {text}
+                    </p>
+                  ))}
+                </div>
               </InfoCard>
             ))}
           </div>
