@@ -741,7 +741,9 @@ const EditProfileForm = () => {
         </Button>
       </section>
 
-      <Button type="submit">Save Changes</Button>
+      <Button type="submit" className="mt-8">
+        Save Changes
+      </Button>
     </form>
   );
 };
