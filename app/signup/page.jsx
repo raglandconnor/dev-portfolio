@@ -22,6 +22,7 @@ export const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [accountSuccess, setAccountSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +61,11 @@ export const SignUpPage = () => {
       }
 
       console.log('Signed up successfully');
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPassword('');
+      setAccountSuccess(true);
     } catch (error) {
       setError('Something went wrong');
     }
@@ -70,72 +76,85 @@ export const SignUpPage = () => {
   return (
     <div className="bg-black">
       <Navbar />
-      <div className="bg-black min-h-screen flex flex-col items-center justify-center">
-        <Card className="w-[95%] md:w-[500px]">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Sign Up for an Account</CardTitle>
-            {/* <CardDescription>
+      {!accountSuccess ? (
+        <div className="bg-black min-h-screen flex flex-col items-center justify-center">
+          <Card className="w-[95%] md:w-[500px]">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl">Sign Up for an Account</CardTitle>
+              {/* <CardDescription>
               Already have an account?{' '}
               <Link href="/login" className="underline hover:font-semibold">
                 Log In
               </Link>
             </CardDescription> */}
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            {error && <p className="text-red-500">{error}</p>}{' '}
-            <form onSubmit={handleSubmit} className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  placeholder="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  placeholder="Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Creating account...' : 'Create account'}
-              </Button>
-            </form>
-          </CardContent>
-          <CardFooter></CardFooter>
-        </Card>
-      </div>
+            </CardHeader>
+            <CardContent className="grid gap-4">
+              {error && <p className="text-red-500">{error}</p>}{' '}
+              <form onSubmit={handleSubmit} className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Creating account...' : 'Create account'}
+                </Button>
+              </form>
+            </CardContent>
+            <CardFooter></CardFooter>
+          </Card>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center min-h-screen pt-24">
+          <p className="text-2xl">Account Created Successfully</p>
+          <p className="mt-2">Expect to recieve an email on release</p>
+          <Link
+            href="/"
+            className="underline hover:font-semibold text-muted-foreground text-sm mt-8"
+          >
+            Back to home
+          </Link>
+        </div>
+      )}{' '}
     </div>
   );
 };
