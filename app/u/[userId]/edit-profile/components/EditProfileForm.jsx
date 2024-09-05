@@ -117,6 +117,58 @@ const EditProfileForm = () => {
     });
   };
 
+  const addExperience = () => {
+    const newExperience = {
+      title: '',
+      company: '',
+      startDate: '',
+      endDate: '',
+      location: '',
+      description: '',
+    };
+
+    setProfileData({
+      ...profileData,
+      experience: [...profileData.experience, newExperience],
+    });
+  };
+
+  const addEducation = () => {
+    const newEducation = {
+      school: '',
+      degree: '',
+      startDate: '',
+      endDate: '',
+      location: '',
+      description: '',
+    };
+
+    setProfileData({
+      ...profileData,
+      education: [...profileData.education, newEducation],
+    });
+  };
+
+  const addProject = () => {
+    const newProject = {
+      title: '',
+      description: '',
+      technologies: [],
+      startDate: '',
+      endDate: '',
+      links: {
+        website: '',
+        github: '',
+        youtube: '',
+      },
+    };
+
+    setProfileData({
+      ...profileData,
+      projects: [...profileData.projects, newProject],
+    });
+  };
+
   return (
     <form className="flex flex-col gap-3 mt-4">
       {/* Basic Information */}
@@ -220,437 +272,473 @@ const EditProfileForm = () => {
       {/* Experiences */}
       <section>
         <h2 className="text-xl font-semibold mt-5">Experiences</h2>
-        {profileData.experience.map((exp, index) => (
-          <Card key={index}>
-            <CardHeader>
-              <CardTitle>{`Experience ${index + 1}`}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Label
-                htmlFor={`experience-title-${index}`}
-                className="text-lg font-medium"
-              >
-                Title
-              </Label>
-              <Input
-                type="text"
-                id={`experience-title-${index}`}
-                value={exp.title}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'experience',
-                    'title',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+        <div className="flex flex-col gap-2">
+          {profileData.experience.map((exp, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <CardTitle>{`Experience ${index + 1}`}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label
+                  htmlFor={`experience-title-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Title
+                </Label>
+                <Input
+                  type="text"
+                  id={`experience-title-${index}`}
+                  value={exp.title}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'experience',
+                      'title',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`experience-company-${index}`}
-                className="text-lg font-medium"
-              >
-                Company
-              </Label>
-              <Input
-                type="text"
-                id={`experience-company-${index}`}
-                value={exp.company}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'experience',
-                    'company',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`experience-company-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Company
+                </Label>
+                <Input
+                  type="text"
+                  id={`experience-company-${index}`}
+                  value={exp.company}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'experience',
+                      'company',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`experience-startDate-${index}`}
-                className="text-lg font-medium"
-              >
-                Start Date
-              </Label>
-              <Input
-                type="text"
-                id={`experience-startDate-${index}`}
-                value={exp.startDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'experience',
-                    'startDate',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`experience-startDate-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Start Date
+                </Label>
+                <Input
+                  type="text"
+                  id={`experience-startDate-${index}`}
+                  value={exp.startDate}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'experience',
+                      'startDate',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`experience-endDate-${index}`}
-                className="text-lg font-medium"
-              >
-                End Date
-              </Label>
-              <Input
-                type="text"
-                id={`experience-endDate-${index}`}
-                value={exp.endDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'experience',
-                    'endDate',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`experience-endDate-${index}`}
+                  className="text-lg font-medium"
+                >
+                  End Date
+                </Label>
+                <Input
+                  type="text"
+                  id={`experience-endDate-${index}`}
+                  value={exp.endDate}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'experience',
+                      'endDate',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`experience-location-${index}`}
-                className="text-lg font-medium"
-              >
-                Location
-              </Label>
-              <Input
-                type="text"
-                id={`experience-location-${index}`}
-                value={exp.location}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'experience',
-                    'location',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`experience-location-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Location
+                </Label>
+                <Input
+                  type="text"
+                  id={`experience-location-${index}`}
+                  value={exp.location}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'experience',
+                      'location',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`experience-description-${index}`}
-                className="text-lg font-medium"
-              >
-                Description
-              </Label>
-              <Textarea
-                id={`experience-description-${index}`}
-                value={exp.description}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'experience',
-                    'description',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
-            </CardContent>
-          </Card>
-        ))}
+                <Label
+                  htmlFor={`experience-description-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Description
+                </Label>
+                <Textarea
+                  id={`experience-description-${index}`}
+                  value={exp.description}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'experience',
+                      'description',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Button
+          variant="secondary"
+          onClick={addExperience}
+          className="mt-4"
+          type="button"
+        >
+          Add Experience
+        </Button>
       </section>
 
       {/* Education */}
       <section>
         <h2 className="text-xl font-semibold mt-5">Education</h2>
-        {profileData.education.map((edu, index) => (
-          <Card key={index}>
-            <CardHeader>
-              <CardTitle>{`Education ${index + 1}`}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Label
-                htmlFor={`education-school-${index}`}
-                className="text-lg font-medium"
-              >
-                School
-              </Label>
-              <Input
-                type="text"
-                id={`education-school-${index}`}
-                value={edu.school}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'education',
-                    'school',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+        <div className="flex flex-col gap-2">
+          {' '}
+          {profileData.education.map((edu, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <CardTitle>{`Education ${index + 1}`}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label
+                  htmlFor={`education-school-${index}`}
+                  className="text-lg font-medium"
+                >
+                  School
+                </Label>
+                <Input
+                  type="text"
+                  id={`education-school-${index}`}
+                  value={edu.school}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'education',
+                      'school',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`education-degree-${index}`}
-                className="text-lg font-medium"
-              >
-                Degree
-              </Label>
-              <Input
-                type="text"
-                id={`education-degree-${index}`}
-                value={edu.degree}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'education',
-                    'degree',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`education-degree-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Degree
+                </Label>
+                <Input
+                  type="text"
+                  id={`education-degree-${index}`}
+                  value={edu.degree}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'education',
+                      'degree',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`education-startDate-${index}`}
-                className="text-lg font-medium"
-              >
-                Start Date
-              </Label>
-              <Input
-                type="text"
-                id={`education-startDate-${index}`}
-                value={edu.startDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'education',
-                    'startDate',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`education-startDate-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Start Date
+                </Label>
+                <Input
+                  type="text"
+                  id={`education-startDate-${index}`}
+                  value={edu.startDate}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'education',
+                      'startDate',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`education-endDate-${index}`}
-                className="text-lg font-medium"
-              >
-                End Date
-              </Label>
-              <Input
-                type="text"
-                id={`education-endDate-${index}`}
-                value={edu.endDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'education',
-                    'endDate',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`education-endDate-${index}`}
+                  className="text-lg font-medium"
+                >
+                  End Date
+                </Label>
+                <Input
+                  type="text"
+                  id={`education-endDate-${index}`}
+                  value={edu.endDate}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'education',
+                      'endDate',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`education-location-${index}`}
-                className="text-lg font-medium"
-              >
-                Location
-              </Label>
-              <Input
-                type="text"
-                id={`education-location-${index}`}
-                value={edu.location}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'education',
-                    'location',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`education-location-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Location
+                </Label>
+                <Input
+                  type="text"
+                  id={`education-location-${index}`}
+                  value={edu.location}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'education',
+                      'location',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`education-description-${index}`}
-                className="text-lg font-medium"
-              >
-                Description
-              </Label>
-              <Textarea
-                id={`education-description-${index}`}
-                value={edu.description}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'education',
-                    'description',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
-            </CardContent>
-          </Card>
-        ))}
+                <Label
+                  htmlFor={`education-description-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Description
+                </Label>
+                <Textarea
+                  id={`education-description-${index}`}
+                  value={edu.description}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'education',
+                      'description',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Button
+          variant="secondary"
+          onClick={addEducation}
+          className="mt-4"
+          type="button"
+        >
+          Add Education
+        </Button>
       </section>
 
       {/* Projects */}
       <section>
         <h2 className="text-xl font-semibold mt-5">Projects</h2>
-        {profileData.projects.map((proj, index) => (
-          <Card key={index}>
-            <CardHeader>
-              <CardTitle>{`Project ${index + 1}`}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Label
-                htmlFor={`project-title-${index}`}
-                className="text-lg font-medium"
-              >
-                Title
-              </Label>
-              <Input
-                type="text"
-                id={`project-title-${index}`}
-                value={proj.title}
-                onChange={(e) =>
-                  handleNestedChange(index, 'projects', 'title', e.target.value)
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
-
-              <p className="text-lg font-medium">Technologies</p>
-              <ul className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
-                {proj.technologies.map((tech, techIndex) => (
-                  <Input
-                    key={techIndex}
-                    value={tech}
-                    onChange={(e) =>
-                      handleTechnologyChange(index, techIndex, e.target.value)
-                    }
-                    className="border border-gray-300 rounded-md p-2"
-                  />
-                ))}
-                <Button
-                  variant="secondary"
-                  onClick={() => addTechnology(index)}
-                  type="button"
+        <div className="flex flex-col gap-2">
+          {profileData.projects.map((proj, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <CardTitle>{`Project ${index + 1}`}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label
+                  htmlFor={`project-title-${index}`}
+                  className="text-lg font-medium"
                 >
-                  Add Technology
-                </Button>
-              </ul>
+                  Title
+                </Label>
+                <Input
+                  type="text"
+                  id={`project-title-${index}`}
+                  value={proj.title}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'projects',
+                      'title',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`project-description-${index}`}
-                className="text-lg font-medium"
-              >
-                Description
-              </Label>
-              <Textarea
-                id={`project-description-${index}`}
-                value={proj.description}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'projects',
-                    'description',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <p className="text-lg font-medium">Technologies</p>
+                <ul className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+                  {proj.technologies.map((tech, techIndex) => (
+                    <Input
+                      key={techIndex}
+                      value={tech}
+                      onChange={(e) =>
+                        handleTechnologyChange(index, techIndex, e.target.value)
+                      }
+                      className="border border-gray-300 rounded-md p-2"
+                    />
+                  ))}
+                  <Button
+                    variant="secondary"
+                    onClick={() => addTechnology(index)}
+                    type="button"
+                  >
+                    Add Technology
+                  </Button>
+                </ul>
 
-              <Label
-                htmlFor={`project-startDate-${index}`}
-                className="text-lg font-medium"
-              >
-                Start Date
-              </Label>
-              <Input
-                type="text"
-                id={`project-startDate-${index}`}
-                value={proj.startDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'projects',
-                    'startDate',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`project-description-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Description
+                </Label>
+                <Textarea
+                  id={`project-description-${index}`}
+                  value={proj.description}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'projects',
+                      'description',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`project-endDate-${index}`}
-                className="text-lg font-medium"
-              >
-                End Date
-              </Label>
-              <Input
-                type="text"
-                id={`project-endDate-${index}`}
-                value={proj.endDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    index,
-                    'projects',
-                    'endDate',
-                    e.target.value
-                  )
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`project-startDate-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Start Date
+                </Label>
+                <Input
+                  type="text"
+                  id={`project-startDate-${index}`}
+                  value={proj.startDate}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'projects',
+                      'startDate',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`project-website-${index}`}
-                className="text-lg font-medium"
-              >
-                Website
-              </Label>
-              <Input
-                type="text"
-                id={`project-website-${index}`}
-                value={proj.links.website}
-                onChange={(e) =>
-                  handleProjectLinksChange(index, 'website', e.target.value)
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`project-endDate-${index}`}
+                  className="text-lg font-medium"
+                >
+                  End Date
+                </Label>
+                <Input
+                  type="text"
+                  id={`project-endDate-${index}`}
+                  value={proj.endDate}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      index,
+                      'projects',
+                      'endDate',
+                      e.target.value
+                    )
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`project-github-${index}`}
-                className="text-lg font-medium"
-              >
-                GitHub
-              </Label>
-              <Input
-                type="text"
-                id={`project-github-${index}`}
-                value={proj.links.github}
-                onChange={(e) =>
-                  handleProjectLinksChange(index, 'github', e.target.value)
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
+                <Label
+                  htmlFor={`project-website-${index}`}
+                  className="text-lg font-medium"
+                >
+                  Website
+                </Label>
+                <Input
+                  type="text"
+                  id={`project-website-${index}`}
+                  value={proj.links.website}
+                  onChange={(e) =>
+                    handleProjectLinksChange(index, 'website', e.target.value)
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
 
-              <Label
-                htmlFor={`project-youtube-${index}`}
-                className="text-lg font-medium"
-              >
-                YouTube
-              </Label>
-              <Input
-                type="text"
-                id={`project-youtube-${index}`}
-                value={proj.links.youtube}
-                onChange={(e) =>
-                  handleProjectLinksChange(index, 'youtube', e.target.value)
-                }
-                className="border border-gray-300 rounded-md p-2"
-              />
-            </CardContent>
-          </Card>
-        ))}
+                <Label
+                  htmlFor={`project-github-${index}`}
+                  className="text-lg font-medium"
+                >
+                  GitHub
+                </Label>
+                <Input
+                  type="text"
+                  id={`project-github-${index}`}
+                  value={proj.links.github}
+                  onChange={(e) =>
+                    handleProjectLinksChange(index, 'github', e.target.value)
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
+
+                <Label
+                  htmlFor={`project-youtube-${index}`}
+                  className="text-lg font-medium"
+                >
+                  YouTube
+                </Label>
+                <Input
+                  type="text"
+                  id={`project-youtube-${index}`}
+                  value={proj.links.youtube}
+                  onChange={(e) =>
+                    handleProjectLinksChange(index, 'youtube', e.target.value)
+                  }
+                  className="border border-gray-300 rounded-md p-2"
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Button
+          variant="secondary"
+          onClick={addProject}
+          className="mt-4"
+          type="button"
+        >
+          Add Project
+        </Button>
       </section>
 
       <Button type="submit">Save Changes</Button>
