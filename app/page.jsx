@@ -26,9 +26,12 @@ export default function Home() {
             connect with others.{' '}
           </p>
           <div className="w-full flex items-center justify-center md:justify-start gap-4">
-            <button className="w-48 h-12 text-sm sm:text-base rounded bg-white text-black hover:bg-gray-200 transition-colors">
+            <Link
+              href="#waitlist"
+              className="w-48 h-12 text-sm sm:text-base flex flex-col items-center justify-center rounded bg-white text-black hover:bg-gray-200 transition-colors"
+            >
               Get Started
-            </button>
+            </Link>
           </div>
         </div>
 
