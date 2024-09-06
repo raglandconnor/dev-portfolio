@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, File, Request, UploadFile
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from . import models, controller, db
 import pdfplumber
+from jose import jwt
+from datetime import datetime, timedelta
+import os
 
 router = APIRouter()
 
@@ -27,14 +31,27 @@ async def signin(request: Request, db: Session = Depends(db.get_db)):
     email = data.get("email")
     password = data.get("password")
     user = controller.getUserByEmail(db, email)
+        
+    if user is None or not controller.verify_password(password, user.password):
+        raise HTTPException(status_code=400, detail="Invalid email or password")
     
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    if not controller.verify_password(password, user.password):
-        raise HTTPException(status_code=400, detail="Incorrect password")
+    # Create JWT token
+    token = create_jwt_token({"sub": user.email})
     
-    return {"message": "Login successful!"}
+    # Create response with token
+    response = JSONResponse(content={"message": "Login successful!", "token": token})
+    
+    # Set cookie
+    response.set_cookie(
+        key="access_token", 
+        value=token, 
+        httponly=True, 
+        max_age=3600,
+        samesite="lax",
+        secure=False  # Set to True if using HTTPS
+    )
+    
+    return response
 
 # Endpoint to get user details by email
 @router.get("/users/{email}")
@@ -62,6 +79,13 @@ async def extract_text_from_pdf(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to extract text from the PDF: {e}")
 
+# Helper function to create JWT token
+def create_jwt_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=60)  # Token expires in 60 minutes
+    to_encode.update({"exp": expire})
+    secret_key = os.environ.get("SECRET_KEY")  # Use environment variable for secret key
+    return jwt.encode(to_encode, secret_key, algorithm="HS256")
 
 @router.post("/test")
 async def test(request: Request):

@@ -1,8 +1,8 @@
-import Spline from '@splinetool/react-spline';
-import Image from 'next/image';
-import Link from 'next/link';
-import infoCards from './components/InfoCards';
-import Navbar from './components/Navbar';
+import Spline from "@splinetool/react-spline";
+import Image from "next/image";
+import Link from "next/link";
+import infoCards from "./components/InfoCards";
+import Navbar from "./components/Navbar";
 
 export default function Home() {
   return (
