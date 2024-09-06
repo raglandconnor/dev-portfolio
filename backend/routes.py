@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, File, Request, UploadFile
 from sqlalchemy.orm import Session
 from . import models, controller, db
 import pdfplumber
@@ -7,7 +7,13 @@ router = APIRouter()
 
 # Sign-up endpoint
 @router.post("/signup/")
-def signup(email: str, firstName: str, lastName: str, password: str, db: Session = Depends(db.get_db)):
+async def signup(request: Request, db: Session = Depends(db.get_db)):
+    data = await request.json()
+    email = data.get("email")
+    firstName = data.get("firstName")
+    lastName = data.get("lastName")
+    password = data.get("password")
+
     existingUser = controller.getUserByEmail(db, email)
     if existingUser:
         raise HTTPException(status_code=400, detail="Email is already registered")
@@ -16,7 +22,10 @@ def signup(email: str, firstName: str, lastName: str, password: str, db: Session
 
 # Sign-in endpoint
 @router.post("/signin/")
-def signin(email: str, password: str, db: Session = Depends(db.get_db)):
+async def signin(request: Request, db: Session = Depends(db.get_db)):
+    data = await request.json()
+    email = data.get("email")
+    password = data.get("password")
     user = controller.getUserByEmail(db, email)
     
     if user is None:
@@ -52,3 +61,10 @@ async def extract_text_from_pdf(file: UploadFile = File(...)):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to extract text from the PDF: {e}")
+
+
+@router.post("/test")
+async def test(request: Request):
+    data = await request.json()
+    print(data)
+    return {"message": "Hello World"}

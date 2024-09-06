@@ -16,7 +16,13 @@ function useHttp(config, immediate = true) {
         const response = await fetch(finalConfig.url, {
           method: finalConfig.method || "GET",
           headers: finalConfig.headers,
-          body: finalConfig.body ? JSON.stringify(finalConfig.body) : undefined,
+          // Don't stringify FormData
+          body:
+            finalConfig.body instanceof FormData
+              ? finalConfig.body
+              : finalConfig.body
+              ? JSON.stringify(finalConfig.body)
+              : undefined,
         });
 
         if (!response.ok) {
