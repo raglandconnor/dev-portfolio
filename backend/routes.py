@@ -54,6 +54,45 @@ async def signin(request: Request, db: Session = Depends(db.get_db)):
     
     return response
 
+@router.put("/profile/update/{email}")
+def update_profile(
+    email: str,
+    display_name: str = None,
+    avatar_url: str = None,
+    current_position: str = None,
+    location: str = None,
+    bio: str = None,
+    github_username: str = None,
+    linkedin_username: str = None,
+    website: str = None,
+    db: Session = Depends(db.get_db)
+):
+    # Fetch user by email
+    user = controller.getUserByEmail(db, email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Fetch the user's profile
+    profile = controller.getProfileByUserId(db, user.id)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    # Update profile details
+    updated_profile = controller.updateProfile(
+        db=db,
+        profile=profile,
+        display_name=display_name,
+        avatar_url=avatar_url,
+        current_position=current_position,
+        location=location,
+        bio=bio,
+        github_username=github_username,
+        linkedin_username=linkedin_username,
+        website=website
+    )
+
+    return updated_profile
+
 # Endpoint to get user details by email
 @router.get("/users/{email}")
 def get_user(email: str, db: Session = Depends(db.get_db)):
