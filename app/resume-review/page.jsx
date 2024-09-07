@@ -7,7 +7,7 @@ export default function ResumeReviewPage() {
         Resume Review
       </h1>
       <p className="text-center text-gray-500 max-w-xl mx-auto mb-6 sm:mb-8">
-        Get personalized feedback on your resume's content, structure, and
+        Get personalized feedback on your resume&apos;s content, structure, and
         formatting from our advanced AI system, powered by OpenAI.
       </p>
       <ResumeUploader />
