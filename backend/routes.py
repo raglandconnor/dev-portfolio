@@ -6,6 +6,7 @@ import pdfplumber
 from jose import jwt
 from datetime import datetime, timedelta
 import os
+import io
 
 router = APIRouter()
 
@@ -69,22 +70,32 @@ async def extract_text_from_pdf(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="Invalid file format. Please upload a PDF file.")
     
     try:
-        with pdfplumber.open(file.file) as pdf:
-            text = ""
+        pdf_content = await file.read()
+        pdf_file = io.BytesIO(pdf_content)
+        
+        text = ""
+        
+        with pdfplumber.open(pdf_file) as pdf:
             for page in pdf.pages:
-                text += page.extract_text()
+                text += page.extract_text() or ""
+                
+                # Extract hyperlinks
+                for annotation in page.hyperlinks:
+                    if 'uri' in annotation:
+                        # Append the hyperlinks to the beginning of the text
+                        text = f"{annotation['uri']}\n{text}"
         
         return {"extracted_text": text}
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to extract text from the PDF: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to extract content from the PDF: {e}")
 
 # Helper function to create JWT token
 def create_jwt_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=60)  # Token expires in 60 minutes
     to_encode.update({"exp": expire})
-    secret_key = os.environ.get("SECRET_KEY")  # Use environment variable for secret key
+    secret_key = os.environ.get("SECRET_KEY")
     return jwt.encode(to_encode, secret_key, algorithm="HS256")
 
 @router.post("/test")

@@ -23,7 +23,6 @@ import {
 const fileTypes = ["pdf"];
 export default function ResumeUploader() {
   const [file, setFile] = useState(null);
-  const [extractedText, setExtractedText] = useState(null);
   const [uploadingError, setUploadingError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
@@ -52,7 +51,6 @@ export default function ResumeUploader() {
       }
 
       const data = await response.json();
-      setExtractedText(data.extracted_text);
 
       // Analyze the extracted text
       const analysisResult = await analyzeResume(data.extracted_text);
@@ -137,7 +135,7 @@ export default function ResumeUploader() {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <p className="text-sm mt-1">{feedback}</p>
+                      <p className="text-sm mt-1 leading-relaxed">{feedback}</p>
                       {examples && examples.length > 0 && (
                         <div className="mt-2">
                           <h4 className="text-sm font-semibold">

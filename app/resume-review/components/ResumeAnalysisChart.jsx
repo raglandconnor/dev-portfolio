@@ -24,8 +24,8 @@ const ResumeAnalysisChart = ({ analysis }) => {
         <Radar
           name="Resume Score"
           dataKey="score"
-          stroke="#8884d8"
-          fill="#8884d8"
+          stroke="hsl(var(--primary))"
+          fill="hsl(var(--primary))"
           fillOpacity={0.6}
         />
       </RadarChart>
