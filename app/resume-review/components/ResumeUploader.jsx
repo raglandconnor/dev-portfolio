@@ -64,41 +64,43 @@ export default function ResumeUploader() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 w-full max-w-3xl mx-auto">
-      <FileUploader
-        handleChange={handleChange}
-        name="resume"
-        types={fileTypes}
-        multiple={false}
-        onTypeError={(error) => {
-          setFile(null);
-          setUploadingError(error);
-        }}
-      >
-        <div className="w-full p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors duration-300 cursor-pointer">
-          {file ? (
-            <>
-              <CircleCheck className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-700 text-center">
-                {file.name}
-              </h3>
-              <p className="text-sm text-gray-500 mt-1 text-center">
-                {(file.size / 1024 / 1024).toFixed(2)} MB
-              </p>
-            </>
-          ) : (
-            <>
-              <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-700 text-center">
-                Upload your resume
-              </h3>
-              <p className="text-sm text-gray-500 mt-1 text-center">
-                Drag and drop or click to select a PDF file
-              </p>
-            </>
-          )}
-        </div>
-      </FileUploader>
+    <div className="flex flex-col items-center justify-center gap-4 w-full mx-auto">
+      <div className="w-full max-w-full overflow-hidden">
+        <FileUploader
+          handleChange={handleChange}
+          name="resume"
+          types={fileTypes}
+          multiple={false}
+          onTypeError={(error) => {
+            setFile(null);
+            setUploadingError(error);
+          }}
+        >
+          <div className="w-full p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors duration-300 cursor-pointer">
+            {file ? (
+              <>
+                <CircleCheck className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 text-center truncate">
+                  {file.name}
+                </h3>
+                <p className="text-sm text-gray-500 mt-1 text-center">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+              </>
+            ) : (
+              <>
+                <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-700 text-center">
+                  Upload your resume
+                </h3>
+                <p className="text-sm text-gray-500 mt-1 text-center">
+                  Drag and drop or click to select a PDF file
+                </p>
+              </>
+            )}
+          </div>
+        </FileUploader>
+      </div>
       {file && (
         <Button
           className="w-full mt-4"
@@ -114,7 +116,7 @@ export default function ResumeUploader() {
       )}
 
       {analysis && (
-        <Card className="w-full mt-8">
+        <Card className="w-full my-8">
           <CardHeader>
             <CardTitle>Resume Analysis</CardTitle>
             <CardDescription>
