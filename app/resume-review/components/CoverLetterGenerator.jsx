@@ -8,19 +8,27 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { generateCoverLetter } from "@/actions/cover-letter-generator";
 
-export default function CoverLetterGenerator({ isOpen, onClose }) {
+export default function CoverLetterGenerator({
+  isOpen,
+  onClose,
+  resumeText,
+  setCoverLetter,
+  setAnalysis,
+}) {
   const [jobDescription, setJobDescription] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
-    // TODO: Implement cover letter generation logic
-    console.log("Generating cover letter for:", jobDescription);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setCoverLetter(null);
+    const coverLetter = await generateCoverLetter(resumeText, jobDescription);
+
     setIsGenerating(false);
     onClose();
+    setCoverLetter(coverLetter);
+    setAnalysis(null);
   };
 
   return (
