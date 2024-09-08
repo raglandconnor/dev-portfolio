@@ -77,9 +77,9 @@ async def getProfile(token: str = Depends(oauth2Scheme), db: Session = Depends(d
         raise HTTPException(status_code=404, detail="Profile not found")
     
     return profile
-    
+
 @router.put("/profile/update/")
-def updateProfile(
+def update_profile(
     displayName: str = None,
     avatarUrl: str = None,
     currentPosition: str = None,
@@ -91,26 +91,38 @@ def updateProfile(
     token: str = Depends(oauth2Scheme),
     db: Session = Depends(db.get_db)
 ):
-    # Get the user by token
+    # Get the user from the token
     user = controller.getUserByToken(db, token)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    # Get the profile by user ID
+    profile = db.query(models.Profile).filter(models.Profile.userId == user.id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    # Update the profile fields
+    updates = {
+        "displayName": displayName,
+        "avatarUrl": avatarUrl,
+        "currentPosition": currentPosition,
+        "location": location,
+        "bio": bio,
+        "githubUsername": githubUsername,
+        "linkedinUsername": linkedinUsername,
+        "website": website
+    }
     
-    # Call updateProfile with the user ID and profile data
-    updatedProfile = controller.updateProfile(
-        db=db,
-        user_id=user.id,
-        displayName=displayName,
-        avatarUrl=avatarUrl,
-        currentPosition=currentPosition,
-        location=location,
-        bio=bio,
-        githubUsername=githubUsername,
-        linkedinUsername=linkedinUsername,
-        website=website
-    )
-    
-    return updatedProfile
+    for field, value in updates.items():
+        if value is not None:
+            setattr(profile, field, value)
+
+    # Commit the changes to the database
+    db.add(profile)
+    db.commit()
+
+    return profile
+
  
 #Experinece Routes
 

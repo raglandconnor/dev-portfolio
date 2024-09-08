@@ -32,6 +32,17 @@ def createUser(db: Session, email: str, firstName: str, lastName: str, password:
 def getUserByEmail(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
+def getProfileByEmail(db: Session, email: str):
+    user = getUserByEmail(db, email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    profile = db.query(models.Profile).filter(models.Profile.userId == user.id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    return profile
+
 def createProfile(db: Session, userId: str, **profile_data):
     profile = models.Profile(userId=userId, **profile_data)
     db.add(profile)
@@ -45,17 +56,17 @@ def getProfileByUserId(db: Session, userId: str):
         raise HTTPException(status_code=404, detail="Profile not found")
     return profile
 
-def updateProfile(db: Session, user_id: str, **profile_data):
-    profile = db.query(models.Profile).filter(models.Profile.userId == user_id).first()
-    if profile is None:
+def getProfileByToken(db: Session, token: str):
+    user = getUserByToken(db, token)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    profile = db.query(models.Profile).filter(models.Profile.userId == user.id).first()
+    if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
     
-    for key, value in profile_data.items():
-        setattr(profile, key, value)
-    
-    db.commit()
-    db.refresh(profile)
     return profile
+
 
 
 def createExperience(db: Session, profileId: str, **experience_data):
