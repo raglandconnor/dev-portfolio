@@ -1,19 +1,16 @@
 from sqlalchemy.orm import Session
 from . import models
 import uuid
-from passlib.context import CryptContext
+from passlib.hash import bcrypt
 from jose import jwt, JWTError
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from .config import SECRET_KEY, ALGORITHM
 
-# Create a password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return bcrypt.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.verify(plain_password, hashed_password)
 
 def createUser(db: Session, email: str, firstName: str, lastName: str, password: str):
     if db.query(models.User).filter(models.User.email == email).first():
@@ -35,21 +32,21 @@ def createUser(db: Session, email: str, firstName: str, lastName: str, password:
 def getUserByEmail(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
-def createProfile(db: Session, user_id: int, **profile_data):
-    profile = models.Profile(user_id=user_id, **profile_data)
+def createProfile(db: Session, userId: str, **profile_data):
+    profile = models.Profile(userId=userId, **profile_data)
     db.add(profile)
     db.commit()
     db.refresh(profile)
     return profile
 
-def getProfileByUserId(db: Session, user_id: int):
-    profile = db.query(models.Profile).filter(models.Profile.user_id == user_id).first()
+def getProfileByUserId(db: Session, userId: str):
+    profile = db.query(models.Profile).filter(models.Profile.userId == userId).first()
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
     return profile
 
-def updateProfile(db: Session, user_id: int, **profile_data):
-    profile = db.query(models.Profile).filter(models.Profile.user_id == user_id).first()
+def updateProfile(db: Session, user_id: str, **profile_data):
+    profile = db.query(models.Profile).filter(models.Profile.userId == user_id).first()
     if profile is None:
         raise HTTPException(status_code=404, detail="Profile not found")
     
@@ -60,29 +57,30 @@ def updateProfile(db: Session, user_id: int, **profile_data):
     db.refresh(profile)
     return profile
 
-def createExperience(db: Session, profile_id: int, **experience_data):
-    experience = models.Experience(profile_id=profile_id, **experience_data)
+
+def createExperience(db: Session, profileId: str, **experience_data):
+    experience = models.Experience(profileId=profileId, **experience_data)
     db.add(experience)
     db.commit()
     db.refresh(experience)
     return experience
 
-def createEducation(db: Session, profile_id: int, **education_data):
-    education = models.Education(profile_id=profile_id, **education_data)
+def createEducation(db: Session, profileId: str, **education_data):
+    education = models.Education(profileId=profileId, **education_data)
     db.add(education)
     db.commit()
     db.refresh(education)
     return education
 
-def createProject(db: Session, profile_id: int, **project_data):
-    project = models.Project(profile_id=profile_id, **project_data)
+def createProject(db: Session, profileId: str, **project_data):
+    project = models.Project(profileId=profileId, **project_data)
     db.add(project)
     db.commit()
     db.refresh(project)
     return project
 
-def updateExperience(db: Session, experience_id: int, **experience_data):
-    experience = db.query(models.Experience).filter(models.Experience.id == experience_id).first()
+def updateExperience(db: Session, experienceId: str, **experience_data):
+    experience = db.query(models.Experience).filter(models.Experience.id == experienceId).first()
     if experience is None:
         raise HTTPException(status_code=404, detail="Experience not found")
     
@@ -93,8 +91,8 @@ def updateExperience(db: Session, experience_id: int, **experience_data):
     db.refresh(experience)
     return experience
 
-def updateEducation(db: Session, education_id: int, **education_data):
-    education = db.query(models.Education).filter(models.Education.id == education_id).first()
+def updateEducation(db: Session, educationId: str, **education_data):
+    education = db.query(models.Education).filter(models.Education.id == educationId).first()
     if education is None:
         raise HTTPException(status_code=404, detail="Education not found")
     
@@ -105,8 +103,8 @@ def updateEducation(db: Session, education_id: int, **education_data):
     db.refresh(education)
     return education
 
-def updateProject(db: Session, project_id: int, **project_data):
-    project = db.query(models.Project).filter(models.Project.id == project_id).first()
+def updateProject(db: Session, projectId: str, **project_data):
+    project = db.query(models.Project).filter(models.Project.id == projectId).first()
     if project is None:
         raise HTTPException(status_code=404, detail="Project not found")
     

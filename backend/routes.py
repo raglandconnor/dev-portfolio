@@ -43,7 +43,7 @@ async def signin(request: Request, db: Session = Depends(db.get_db)):
     password = data.get("password")
     user = controller.getUserByEmail(db, email)
         
-    if user is None or not controller.verifyPassword(password, user.password):
+    if user is None or not controller.verify_password(password, user.password):
         raise HTTPException(status_code=400, detail="Invalid email or password")
     
     # Create JWT token
@@ -77,8 +77,7 @@ async def getProfile(token: str = Depends(oauth2Scheme), db: Session = Depends(d
         raise HTTPException(status_code=404, detail="Profile not found")
     
     return profile
-
-# Endpoint to upload users profile info
+    
 @router.put("/profile/update/")
 def updateProfile(
     displayName: str = None,
@@ -97,13 +96,10 @@ def updateProfile(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    profile = controller.getProfileByUserId(db, user.id)
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
-    
+    # Call updateProfile with the user ID and profile data
     updatedProfile = controller.updateProfile(
         db=db,
-        profile=profile,
+        user_id=user.id,
         displayName=displayName,
         avatarUrl=avatarUrl,
         currentPosition=currentPosition,
@@ -115,7 +111,7 @@ def updateProfile(
     )
     
     return updatedProfile
-
+ 
 #Experinece Routes
 
 # Create a new experience record
@@ -203,15 +199,6 @@ def deleteExperience(id: str, db: Session = Depends(db.get_db)):
     controller.deleteExperience(db, id)
     
     return {"message": "Experience deleted successfully"}
-
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from . import models, controller, db
-from fastapi.security import OAuth2PasswordBearer
-
-router = APIRouter()
-oauth2Scheme = OAuth2PasswordBearer(tokenUrl="signin")
 
 #Education Routes
 
@@ -426,6 +413,12 @@ async def extractTextFromPdf(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to extract content from the PDF: {e}")
 
+@router.post("/test")
+async def test(request: Request):
+    data = await request.json()
+    print(data)
+    return {"message": "Hello World"}
+
 # Helper function to create JWT token
 def createJwtToken(data: dict):
     toEncode = data.copy()
@@ -433,9 +426,3 @@ def createJwtToken(data: dict):
     toEncode.update({"exp": expire})
     secretKey = os.environ.get("SECRET_KEY")
     return jwt.encode(toEncode, secretKey, algorithm="HS256")
-
-@router.post("/test")
-async def test(request: Request):
-    data = await request.json()
-    print(data)
-    return {"message": "Hello World"}
