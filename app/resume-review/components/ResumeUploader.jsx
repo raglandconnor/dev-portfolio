@@ -58,8 +58,6 @@ export default function ResumeUploader() {
     }
   };
 
-  console.log(analysis);
-
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-full mx-auto">
       <div className="w-full max-w-full overflow-hidden">
