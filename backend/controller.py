@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from . import models
-from .models import Profile
 import uuid
 from passlib.context import CryptContext
 from jose import jwt, JWTError
@@ -17,6 +16,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 def createUser(db: Session, email: str, firstName: str, lastName: str, password: str):
+    if db.query(models.User).filter(models.User.email == email).first():
+        raise HTTPException(status_code=400, detail="Email is already registered")
+    
     hashed_password = hash_password(password)
     dbUser = models.User(
         id=str(uuid.uuid4()), 
@@ -33,51 +35,87 @@ def createUser(db: Session, email: str, firstName: str, lastName: str, password:
 def getUserByEmail(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
-def createProfile(db: Session, user_id: int, display_name: str = None, avatar_url: str = None, current_position: str = None, location: str = None, bio: str = None, github_username: str = None, linkedin_username: str = None, website: str = None):
-    profile = Profile(
-        user_id=user_id,
-        display_name=display_name,
-        avatar_url=avatar_url,
-        current_position=current_position,
-        location=location,
-        bio=bio,
-        github_username=github_username,
-        linkedin_username=linkedin_username,
-        website=website
-    )
+def createProfile(db: Session, user_id: int, **profile_data):
+    profile = models.Profile(user_id=user_id, **profile_data)
     db.add(profile)
     db.commit()
     db.refresh(profile)
     return profile
 
-def getProfileByUserId(db: Session, user_id: str):
+def getProfileByUserId(db: Session, user_id: int):
+    profile = db.query(models.Profile).filter(models.Profile.user_id == user_id).first()
+    if profile is None:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return profile
 
-    return db.query(Profile).filter(Profile.user_id == user_id).first()
-
-def updateProfile(db: Session, profile: Profile, display_name: str = None, avatar_url: str = None,
-                  current_position: str = None, location: str = None, bio: str = None,
-                  github_username: str = None, linkedin_username: str = None, website: str = None):
-
-    if display_name is not None:
-        profile.display_name = display_name
-    if avatar_url is not None:
-        profile.avatar_url = avatar_url
-    if current_position is not None:
-        profile.current_position = current_position
-    if location is not None:
-        profile.location = location
-    if bio is not None:
-        profile.bio = bio
-    if github_username is not None:
-        profile.github_username = github_username
-    if linkedin_username is not None:
-        profile.linkedin_username = linkedin_username
-    if website is not None:
-        profile.website = website
-
+def updateProfile(db: Session, user_id: int, **profile_data):
+    profile = db.query(models.Profile).filter(models.Profile.user_id == user_id).first()
+    if profile is None:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    for key, value in profile_data.items():
+        setattr(profile, key, value)
+    
     db.commit()
     db.refresh(profile)
     return profile
+
+def createExperience(db: Session, profile_id: int, **experience_data):
+    experience = models.Experience(profile_id=profile_id, **experience_data)
+    db.add(experience)
+    db.commit()
+    db.refresh(experience)
+    return experience
+
+def createEducation(db: Session, profile_id: int, **education_data):
+    education = models.Education(profile_id=profile_id, **education_data)
+    db.add(education)
+    db.commit()
+    db.refresh(education)
+    return education
+
+def createProject(db: Session, profile_id: int, **project_data):
+    project = models.Project(profile_id=profile_id, **project_data)
+    db.add(project)
+    db.commit()
+    db.refresh(project)
+    return project
+
+def updateExperience(db: Session, experience_id: int, **experience_data):
+    experience = db.query(models.Experience).filter(models.Experience.id == experience_id).first()
+    if experience is None:
+        raise HTTPException(status_code=404, detail="Experience not found")
+    
+    for key, value in experience_data.items():
+        setattr(experience, key, value)
+    
+    db.commit()
+    db.refresh(experience)
+    return experience
+
+def updateEducation(db: Session, education_id: int, **education_data):
+    education = db.query(models.Education).filter(models.Education.id == education_id).first()
+    if education is None:
+        raise HTTPException(status_code=404, detail="Education not found")
+    
+    for key, value in education_data.items():
+        setattr(education, key, value)
+    
+    db.commit()
+    db.refresh(education)
+    return education
+
+def updateProject(db: Session, project_id: int, **project_data):
+    project = db.query(models.Project).filter(models.Project.id == project_id).first()
+    if project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    for key, value in project_data.items():
+        setattr(project, key, value)
+    
+    db.commit()
+    db.refresh(project)
+    return project
 
 def getUserByToken(db: Session, token: str):
     credentials_exception = HTTPException(
