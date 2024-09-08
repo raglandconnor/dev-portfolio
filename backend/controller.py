@@ -3,6 +3,9 @@ from . import models
 from .models import Profile
 import uuid
 from passlib.context import CryptContext
+from jose import jwt, JWTError
+from fastapi import Depends, HTTPException
+from .config import SECRET_KEY, ALGORITHM
 
 # Create a password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -30,12 +33,8 @@ def createUser(db: Session, email: str, firstName: str, lastName: str, password:
 def getUserByEmail(db: Session, email: str):
     return db.query(models.User).filter(models.User.email == email).first()
 
-def createProfile(db: Session, user_id: str, display_name: str, avatar_url: str = None,
-                  current_position: str = None, location: str = None, bio: str = None,
-                  github_username: str = None, linkedin_username: str = None, website: str = None):
-
+def createProfile(db: Session, user_id: int, display_name: str = None, avatar_url: str = None, current_position: str = None, location: str = None, bio: str = None, github_username: str = None, linkedin_username: str = None, website: str = None):
     profile = Profile(
-        id=str(uuid.uuid4()),
         user_id=user_id,
         display_name=display_name,
         avatar_url=avatar_url,
@@ -79,3 +78,29 @@ def updateProfile(db: Session, profile: Profile, display_name: str = None, avata
     db.commit()
     db.refresh(profile)
     return profile
+
+def getUserByToken(db: Session, token: str):
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        # Decode the JWT token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        
+        if email is None:
+            raise credentials_exception
+        
+    except JWTError:
+        raise credentials_exception
+    
+    # Fetch the user from the database by email
+    user = db.query(models.User).filter(models.User.email == email).first()
+    
+    if user is None:
+        raise credentials_exception
+    
+    return user

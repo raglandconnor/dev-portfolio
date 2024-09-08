@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, File, Request, UploadFile
 from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from . import models, controller, db
 import pdfplumber
@@ -10,6 +11,9 @@ import io
 
 router = APIRouter()
 
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="signin")
+
 # Sign-up endpoint
 @router.post("/signup/")
 async def signup(request: Request, db: Session = Depends(db.get_db)):
@@ -19,11 +23,18 @@ async def signup(request: Request, db: Session = Depends(db.get_db)):
     lastName = data.get("lastName")
     password = data.get("password")
 
+    # Check if the user already exists
     existingUser = controller.getUserByEmail(db, email)
     if existingUser:
         raise HTTPException(status_code=400, detail="Email is already registered")
+
+    # Create the user
+    user = controller.createUser(db=db, email=email, firstName=firstName, lastName=lastName, password=password)
     
-    return controller.createUser(db=db, email=email, firstName=firstName, lastName=lastName, password=password)
+    # After user is created, create a blank profile for the user
+    profile = controller.createProfile(db=db, user_id=user.id)
+    
+    return {"message": "User created successfully", "user": user, "profile": profile}
 
 # Sign-in endpoint
 @router.post("/signin/")
@@ -54,9 +65,23 @@ async def signin(request: Request, db: Session = Depends(db.get_db)):
     
     return response
 
-@router.put("/profile/update/{email}")
+#Endpoint to retrieve users info
+@router.get("/profile/")
+async def get_profile(token: str = Depends(oauth2_scheme), db: Session = Depends(db.get_db)):
+    # Get the user by token
+    user = controller.getUserByToken(db, token)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    profile = controller.getProfileByUserId(db, user.id)
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    return profile
+
+#Endpoint to upload users profile info
+@router.put("/profile/update/")
 def update_profile(
-    email: str,
     display_name: str = None,
     avatar_url: str = None,
     current_position: str = None,
@@ -65,19 +90,18 @@ def update_profile(
     github_username: str = None,
     linkedin_username: str = None,
     website: str = None,
+    token: str = Depends(oauth2_scheme),
     db: Session = Depends(db.get_db)
 ):
-    # Fetch user by email
-    user = controller.getUserByEmail(db, email)
+    # Get the user by token
+    user = controller.getUserByToken(db, token)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
-    # Fetch the user's profile
+    
     profile = controller.getProfileByUserId(db, user.id)
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
-
-    # Update profile details
+    
     updated_profile = controller.updateProfile(
         db=db,
         profile=profile,
@@ -90,7 +114,7 @@ def update_profile(
         linkedin_username=linkedin_username,
         website=website
     )
-
+    
     return updated_profile
 
 # Endpoint to get user details by email
