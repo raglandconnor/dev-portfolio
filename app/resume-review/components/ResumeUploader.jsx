@@ -19,6 +19,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import CoverLetterGenerator from "./CoverLetterGenerator";
 
 const fileTypes = ["pdf"];
 export default function ResumeUploader() {
@@ -26,6 +27,7 @@ export default function ResumeUploader() {
   const [uploadingError, setUploadingError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [analysis, setAnalysis] = useState(null);
+  const [isCoverLetterModalOpen, setIsCoverLetterModalOpen] = useState(false);
 
   const handleChange = (file) => {
     setFile(file);
@@ -102,15 +104,28 @@ export default function ResumeUploader() {
         </FileUploader>
       </div>
       {file && (
-        <Button
-          className="w-full mt-4"
-          onClick={handleReview}
-          disabled={isLoading}
-        >
-          <FileText className="w-4 h-4 mr-2" />
-          {isLoading ? "Analyzing..." : "Review Resume"}
-        </Button>
+        <div className="w-full flex flex-col md:flex-row gap-4">
+          <Button
+            className="flex-1 mt-4"
+            onClick={handleReview}
+            disabled={isLoading}
+          >
+            <FileText className="w-4 h-4 mr-2" />
+            {isLoading ? "Analyzing..." : "Review Resume"}
+          </Button>
+          <Button
+            className="flex-1 mt-4"
+            variant="outline"
+            onClick={() => setIsCoverLetterModalOpen(true)}
+          >
+            Generate Cover Letter
+          </Button>
+        </div>
       )}
+      <CoverLetterGenerator
+        isOpen={isCoverLetterModalOpen}
+        onClose={() => setIsCoverLetterModalOpen(false)}
+      />
       {uploadingError && (
         <p className="text-red-500 text-center mt-4">{uploadingError}</p>
       )}

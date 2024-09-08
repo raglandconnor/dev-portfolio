@@ -38,7 +38,7 @@ export default function Home() {
         <div className="w-full h-2/4 md:h-full md:w-3/5 relative">
           <Spline
             className="absolute inset-0 w-full h-full pointer-events-none"
-            scene="https://prod.spline.design/pvM5sSiYV2ivWraz/scene.splinecode"
+            scene="https://prod.spline.design/abljASDoGAAKldoO/scene.splinecode"
           />
         </div>
       </header>
@@ -110,7 +110,7 @@ export default function Home() {
 
 function InfoCard({ title, Icon, children }) {
   return (
-    <div className="w-full h-80 rounded flex flex-col justify-around items-center p-8 bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-xl">
+    <div className="w-full h-80 rounded flex flex-col justify-around items-center p-8 bg-gray-900 bg-opacity-50 backdrop-filter backdrop-blur-xl hover:scale-105 transition-transform duration-300">
       <div className="p-4 bg-white rounded-full">
         <Icon className="text-black" />
       </div>
