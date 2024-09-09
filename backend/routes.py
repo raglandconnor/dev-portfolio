@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, File, Request, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, File, Request, UploadFile, Body
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -79,15 +79,8 @@ async def getProfile(token: str = Depends(oauth2Scheme), db: Session = Depends(d
     return profile
     
 @router.put("/profile/update/")
-def updateProfile(
-    displayName: str = None,
-    avatarUrl: str = None,
-    currentPosition: str = None,
-    location: str = None,
-    bio: str = None,
-    githubUsername: str = None,
-    linkedinUsername: str = None,
-    website: str = None,
+async def updateProfile(
+    profile_data: dict = Body(...),
     token: str = Depends(oauth2Scheme),
     db: Session = Depends(db.get_db)
 ):
@@ -100,14 +93,7 @@ def updateProfile(
     updatedProfile = controller.updateProfile(
         db=db,
         user_id=user.id,
-        displayName=displayName,
-        avatarUrl=avatarUrl,
-        currentPosition=currentPosition,
-        location=location,
-        bio=bio,
-        githubUsername=githubUsername,
-        linkedinUsername=linkedinUsername,
-        website=website
+        **profile_data
     )
     
     return updatedProfile
