@@ -1,4 +1,4 @@
-import ExperienceItem from './experience/ExperienceItem';
+import ExperienceItems from './experience/ExperienceItems';
 
 const ExperienceCard = ({ userId }) => {
   return (
@@ -6,8 +6,7 @@ const ExperienceCard = ({ userId }) => {
       <h2 className="font-semibold text-2xl md:text-3xl border-b">
         Experience
       </h2>
-      <ExperienceItem userId={userId} />
-      <ExperienceItem userId={userId} />
+      <ExperienceItems userId={userId} />
     </div>
   );
 };

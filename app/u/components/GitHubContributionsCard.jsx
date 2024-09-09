@@ -118,7 +118,7 @@ const GitHubContribGraph = ({ githubLogin }) => {
       const header = document.createElement('div');
       const total = document.createElement('span');
       const profile = document.createElement('div');
-      profile.innerHTML = `<a href="https://github.com/${ghLogin}">${ghLogin}</a>`;
+      profile.innerHTML = `<a href="https://github.com/${ghLogin}" target="_blank">${ghLogin}</a>`;
       header.className = 'ghCalendarHeader';
       total.textContent = `${totalContribs} GitHub contributions in the last year`;
       header.appendChild(total);
@@ -155,7 +155,7 @@ const GitHubContribGraph = ({ githubLogin }) => {
   }, [githubLogin]);
 
   return (
-    <div className="border rounded-xl text-muted-foreground flex items-center justify-center">
+    <div className="border pt-1 rounded-xl text-muted-foreground flex items-center justify-center">
       <div id="gh" data-login={githubLogin}></div>
     </div>
   );
