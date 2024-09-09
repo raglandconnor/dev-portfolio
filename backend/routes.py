@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, File, Request, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, File, Request, UploadFile, Body
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -32,7 +32,7 @@ async def signup(request: Request, db: Session = Depends(db.get_db)):
     user = controller.createUser(db=db, email=email, firstName=firstName, lastName=lastName, password=password)
     
     # After user is created, create a blank profile for the user
-    profile = controller.createProfile(db=db, user_id=user.id)
+    profile = controller.createProfile(db=db, userId=user.id)
     
     return {"message": "User created successfully", "user": user, "profile": profile}
 
@@ -73,23 +73,23 @@ async def get_profile(token: str = Depends(oauth2_scheme), db: Session = Depends
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
+    # Get all user-related information
     profile = controller.getProfileByUserId(db, user.id)
-    if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
+    experiences = controller.getExperiencesByUserId(db, user.id)
+    educations = controller.getEducationsByUserId(db, user.id)
+    projects = controller.getProjectsByUserId(db, user.id)
     
-    return profile
+    return {
+        "profile": profile,
+        "experiences": experiences,
+        "educations": educations,
+        "projects": projects
+    }
 
 #Endpoint to upload users profile info
 @router.put("/profile/update/")
 def update_profile(
-    display_name: str = None,
-    avatar_url: str = None,
-    current_position: str = None,
-    location: str = None,
-    bio: str = None,
-    github_username: str = None,
-    linkedin_username: str = None,
-    website: str = None,
+    profile_data: dict = Body(...),
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(db.get_db)
 ):
@@ -102,17 +102,11 @@ def update_profile(
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
     
+    # Call updateProfile with the profile and profile data
     updated_profile = controller.updateProfile(
         db=db,
-        profile=profile,
-        display_name=display_name,
-        avatar_url=avatar_url,
-        current_position=current_position,
-        location=location,
-        bio=bio,
-        github_username=github_username,
-        linkedin_username=linkedin_username,
-        website=website
+        userId=user.id,
+        **profile_data
     )
     
     return updated_profile
@@ -166,3 +160,19 @@ async def test(request: Request):
     data = await request.json()
     print(data)
     return {"message": "Hello World"}
+
+@router.put("/profile/batch-update/")
+def batch_update_profile(
+    profile_data: dict = Body(...),
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(db.get_db)
+):
+    # Get the user by token
+    user = controller.getUserByToken(db, token)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Call batchUpdateUserProfile with the profile data
+    updated_data = controller.batchUpdateUserProfile(db, user.id, profile_data)
+    
+    return updated_data

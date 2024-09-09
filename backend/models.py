@@ -28,16 +28,63 @@ class Profile(Base):
     __tablename__ = 'profiles'
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    userId = Column(String, ForeignKey('users.id'), nullable=False)
 
     # Profile fields
-    display_name = Column(String)
-    avatar_url = Column(String)
-    current_position = Column(String)
+    displayName = Column(String)
+    avatarUrl = Column(String)
+    currentPosition = Column(String)
     location = Column(String)
     bio = Column(String)
-    github_username = Column(String)
-    linkedin_username = Column(String)
+    githubUsername = Column(String)
+    linkedinUsername = Column(String)
     website = Column(String)
 
     user = relationship("User", back_populates="profile")
+
+class Experience(Base):
+    __tablename__ = 'experiences'
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    userId = Column(String, ForeignKey('users.id'), nullable=False)
+    title = Column(String)
+    company = Column(String)
+    startDate = Column(String)
+    endDate = Column(String)
+    location = Column(String)
+    description = Column(String)
+
+    user = relationship("User", back_populates="experiences")
+
+class Education(Base):
+    __tablename__ = 'educations'
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    userId = Column(String, ForeignKey('users.id'), nullable=False)
+    school = Column(String)
+    degree = Column(String)
+    fieldOfStudy = Column(String)
+    startDate = Column(String)
+    endDate = Column(String)
+    location = Column(String)
+    description = Column(String)
+
+    user = relationship("User", back_populates="educations")
+
+class Project(Base):
+    __tablename__ = 'projects'
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    userId = Column(String, ForeignKey('users.id'), nullable=False)
+    title = Column(String)
+    description = Column(String)
+    technologies = Column(String)  # Store as JSON string
+    startDate = Column(String)
+    endDate = Column(String)
+    links = Column(String)  # Store as JSON string
+
+    user = relationship("User", back_populates="projects")
+
+User.experiences = relationship("Experience", order_by=Experience.id, back_populates="user")
+User.educations = relationship("Education", order_by=Education.id, back_populates="user")
+User.projects = relationship("Project", order_by=Project.id, back_populates="user")
