@@ -77,17 +77,22 @@ async def getProfile(token: str = Depends(oauth2Scheme), db: Session = Depends(d
         raise HTTPException(status_code=404, detail="Profile not found")
     
     return profile
-    
+
 @router.put("/profile/update/")
 async def updateProfile(
     profile_data: dict = Body(...),
     token: str = Depends(oauth2Scheme),
     db: Session = Depends(db.get_db)
 ):
-    # Get the user by token
+    # Get the user from the token
     user = controller.getUserByToken(db, token)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    # Get the profile by user ID
+    profile = db.query(models.Profile).filter(models.Profile.userId == user.id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
     
     # Call updateProfile with the user ID and profile data
     updatedProfile = controller.updateProfile(
