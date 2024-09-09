@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import BioCard from '../components/BioCard';
-import GitHubContributionsCard from '../components/GitHubContributionsCard';
-import ExperienceCard from '../components/ExperienceCard';
-import EducationCard from '../components/EducationCard';
-import ProjectsCard from '../components/ProjectsCard';
+import Image from "next/image";
+import BioCard from "../components/BioCard";
+import GitHubContributionsCard from "../components/GitHubContributionsCard";
+import ExperienceCard from "../components/ExperienceCard";
+import EducationCard from "../components/EducationCard";
+import ProjectsCard from "../components/ProjectsCard";
 
 const ProfilePage = ({ params }) => {
   return (
